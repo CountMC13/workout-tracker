@@ -1,0 +1,1063 @@
+:root {
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-soft: #ccfbf1;
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --danger: #dc2626;
+  --radius: 14px;
+  --nav-h: 64px;
+  --max-w: 560px;
+  --shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, #root {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+}
+
+.app {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);   /* re-establish inherited text color from the section/theme-scoped --text (fixes dark headers/names in the workout dark theme) */
+  position: relative;
+}
+
+.app-main {
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
+  min-height: 100vh;
+}
+
+.page {
+  padding: 16px 16px 24px;
+}
+
+/* --- Header --- */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  padding: 8px 0;
+  z-index: 5;
+}
+.page-header h1 {
+  font-size: 22px;
+  margin: 0;
+  flex: 1;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Buttons --- */
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px 16px;
+  cursor: pointer;
+  min-height: 44px;
+}
+.btn-primary {
+  background: var(--teal);
+  color: #fff;
+}
+.btn-primary:active { background: var(--teal-dark); }
+.btn-primary.logged,
+.btn-primary.logged:active { background: var(--teal-dark); }
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-danger {
+  background: #fef2f2;
+  color: var(--danger);
+  border: 1px solid #fecaca;
+}
+.full { width: 100%; }
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.icon-btn:active { background: var(--border); }
+.icon-btn.danger { color: var(--danger); }
+
+/* --- Filter chips --- */
+.filter-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-chip {
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.filter-chip.active {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+}
+
+/* --- Exercise list --- */
+.exercise-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.exercise-card {
+  display: flex;
+  gap: 12px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  align-items: center;
+}
+.exercise-card-main { flex: 1; min-width: 0; }
+.exercise-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.exercise-card-head h3 {
+  margin: 0;
+  font-size: 16px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.exercise-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  margin: 4px 0 8px;
+}
+.exercise-meta .dot::before {
+  content: '•';
+  margin-right: 8px;
+  color: var(--border);
+}
+
+.done-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 60px;
+  min-height: 60px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.done-btn.done {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+}
+
+/* --- Chips (muscle tags) --- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip {
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.chip-sm {
+  font-size: 11px;
+  padding: 2px 8px;
+}
+
+/* --- Empty / misc --- */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+}
+.empty-state svg { color: var(--teal); }
+.empty-state h2 { margin: 16px 0 6px; color: var(--text); }
+.empty-state p { margin: 0 0 20px; }
+.empty-state .btn-primary { display: inline-flex; }
+.muted { color: var(--muted); }
+.center { text-align: center; }
+
+/* --- Forms --- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field > span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+.field-row .field { flex: 1; }
+input,
+textarea,
+select {
+  font: inherit;
+  font-size: 16px; /* >=16px avoids iOS/Android zoom-on-focus */
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-color: var(--teal);
+}
+textarea { resize: vertical; }
+
+.tag-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag-toggle {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text);
+}
+.custom-tag {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.custom-tag input { flex: 1; }
+.custom-tag .btn-secondary { white-space: nowrap; }
+
+.video-file-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.video-file-name {
+  flex: 1;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* --- Video player --- */
+.video-player {
+  background: #000;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.video-player video {
+  width: 100%;
+  max-height: 50vh;
+  display: block;
+  background: #000;
+}
+.video-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 160px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+.seek {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 6px;
+  accent-color: var(--teal);
+  display: block;
+}
+.video-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px 14px;
+  background: #0a0a0a;
+}
+.vbtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+}
+.vbtn-primary {
+  width: 60px;
+  height: 60px;
+  background: var(--teal);
+}
+.vbtn-badge {
+  position: absolute;
+  bottom: 4px;
+  font-size: 9px;
+  font-weight: 700;
+}
+.video-time {
+  margin-left: auto;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Detail --- */
+.detail-stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.stat {
+  flex: 1;
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.stat-value { display: block; font-size: 17px; font-weight: 700; }
+.stat-label { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.detail-section { margin-top: 22px; }
+.detail-section h2 {
+  font-size: 15px;
+  margin: 0 0 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.prewrap {
+  white-space: pre-wrap;
+  margin: 0;
+  line-height: 1.5;
+  background: var(--surface);
+  padding: 12px 14px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+/* Scrollable error text shown by the global ErrorBoundary */
+.error-pre {
+  margin: 0;
+  max-height: 45vh;
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.log-row {
+  display: flex;
+  gap: 10px;
+}
+.log-row input { flex: 1; }
+.log-row .btn-primary { flex: 2; white-space: nowrap; }
+
+.history-list,
+.day-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.history-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  box-shadow: var(--shadow);
+}
+.history-check { color: var(--teal); flex-shrink: 0; }
+.day-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  padding: 12px 14px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.day-item-name { font-weight: 600; margin-bottom: 4px; }
+
+/* --- Calendar filters --- */
+.cal-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* --- react-calendar overrides --- */
+.react-calendar {
+  width: 100%;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 10px;
+  font-family: inherit;
+}
+.react-calendar button { border-radius: 10px; }
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus,
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background: var(--bg);
+}
+.react-calendar__tile {
+  position: relative;
+  padding-top: 12px;
+  padding-bottom: 18px;
+  line-height: 1.1;
+}
+.react-calendar__tile--now {
+  background: var(--teal-soft);
+}
+.react-calendar__month-view__days__day--weekend {
+  color: #475569;
+}
+.react-calendar__tile.has-completions {
+  font-weight: 700;
+  color: var(--teal-dark);
+}
+.react-calendar__tile.selected-day {
+  background: var(--teal) !important;
+  color: #fff !important;
+}
+.react-calendar__tile.selected-day .cal-dot { background: #fff; }
+.cal-dot {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+/* --- Bottom navigation --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 20;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.nav-item.active {
+  color: var(--teal);
+}
+
+/* ===================================================================
+   Section theming — the Workout section recolours the teal accent to
+   amber and switches to a dark theme by overriding the CSS tokens, so
+   every existing teal-driven component recolours with no per-component
+   edits.
+   =================================================================== */
+.app[data-section='workout'] {
+  --teal: #c2410c;       /* darker orange — white text now ~5.8:1 (was #f97316 ~3.2:1, failed AA) */
+  --teal-dark: #9a3412;  /* genuinely DARKER than --teal — fixes the inverted pressed/"logged" state (was #fb923c, lighter) */
+  --teal-soft: #9a3412;  /* lifted so the calendar "today" tile reads on the dark surface (was #7c2d12) */
+}
+.app[data-theme='dark'] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --text: #ffffff;
+  --muted: #ffffff;  /* all non-accent text is pure white in the workout section for maximum legibility; orange accents (var(--teal)) are unchanged */
+  --border: #2d333b;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.app[data-theme='dark'] .btn-secondary { color: var(--text); }
+/* Explicitly force white on text elements that don't set their own color, so
+   legibility doesn't depend on the :root→.app inheritance of `color`. Orange
+   accents (var(--teal)) and the amber toast are deliberately excluded. */
+.app[data-theme='dark'] .page-header h1,
+.app[data-theme='dark'] .detail-section h2,
+.app[data-theme='dark'] .empty-state h2,
+.app[data-theme='dark'] .pr-name,
+.app[data-theme='dark'] .pr-value,
+.app[data-theme='dark'] .day-item-name,
+.app[data-theme='dark'] .entry-head h3,
+.app[data-theme='dark'] .wod-card .wod-name,
+.app[data-theme='dark'] .hero-weight,
+.app[data-theme='dark'] .timer-display,
+.app[data-theme='dark'] .num-display,
+.app[data-theme='dark'] .stat-value {
+  color: var(--text);
+}
+.app[data-theme='dark'] .react-calendar,
+.app[data-theme='dark'] .react-calendar button { color: var(--text); }
+.app[data-theme='dark'] .react-calendar__navigation button:enabled:hover,
+.app[data-theme='dark'] .react-calendar__navigation button:enabled:focus,
+.app[data-theme='dark'] .react-calendar__tile:enabled:hover,
+.app[data-theme='dark'] .react-calendar__tile:enabled:focus { background: #21262d; }
+.app[data-theme='dark'] .react-calendar__month-view__days__day--weekend { color: #ffffff; }
+.app[data-theme='dark'] .react-calendar__month-view__days__day--neighboringMonth { color: rgba(255, 255, 255, 0.55); }
+.app[data-theme='dark'] .react-calendar__tile.has-completions { color: var(--teal-dark); }
+
+/* Run is its own top-level section: same dark theme as Workout but a distinct
+   emerald accent so it reads as separate. Only the accent tokens change; the
+   shared data-theme='dark' rules above handle the rest. */
+.app[data-section='run'] {
+  --teal: #047857;       /* emerald-700 — white text ~4.7:1, passes AA */
+  --teal-dark: #065f46;  /* darker than --teal (keeps pressed/active states correct) */
+  --teal-soft: #065f46;
+}
+
+/* ===================================================================
+   Section switcher (top bar)
+   =================================================================== */
+.section-switcher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+.seg {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px;
+}
+.seg-item {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 999px;
+}
+.seg-item.active {
+  background: var(--teal);
+  color: #fff;
+}
+.seg-gear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.seg-gear.active { color: var(--teal); border-color: var(--teal); }
+
+/* Desktop: a roomier centred column (phone-first layout, widened) */
+@media (min-width: 768px) {
+  .app, .bottom-nav, .section-switcher { max-width: 720px; }
+}
+
+/* ===================================================================
+   Generic helpers reused by the new pages
+   =================================================================== */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.card + .card { margin-top: 12px; }
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 22px 0 10px;
+}
+.row-between { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.tap { min-height: 56px; }
+
+/* Toast (PR! and confirmations) */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  background: #fbbf24;
+  color: #1c1917;
+  font-weight: 800;
+  padding: 12px 18px;
+  border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: toast-in 0.2s ease;
+}
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 8px); } }
+.toast-action {
+  margin-left: 6px;
+  border: none;
+  background: rgba(0, 0, 0, 0.18);
+  color: inherit;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 36px;
+}
+.toast-action:active { background: rgba(0, 0, 0, 0.28); }
+
+/* ===================================================================
+   Home dashboard
+   =================================================================== */
+.home-greeting { font-size: 14px; color: var(--muted); margin: 0 0 14px; }
+.status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.status-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+}
+.status-card .status-head { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.status-card .status-big { font-size: 22px; font-weight: 800; }
+.status-card.done { border-color: var(--teal); }
+.status-card .status-sub { font-size: 13px; color: var(--muted); }
+
+.week-strip { display: flex; gap: 8px; align-items: center; }
+.week-dots { display: flex; gap: 7px; flex: 1; }
+.week-day { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.week-day .dot-circle {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--border); background: transparent;
+}
+.week-day.filled .dot-circle { background: var(--teal); border-color: var(--teal); }
+.week-day .dot-label { font-size: 10px; color: var(--muted); }
+.streak { font-weight: 800; white-space: nowrap; color: var(--text); }
+
+/* ===================================================================
+   Body metrics
+   =================================================================== */
+.hero { text-align: left; }
+.hero-weight { font-size: 40px; font-weight: 800; line-height: 1; }
+.hero-weight span { font-size: 18px; font-weight: 600; color: var(--muted); }
+.hero-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.hero-delta { font-size: 14px; color: var(--muted); }
+.hero-delta.good { color: #16a34a; }
+.caveat {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.info-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid var(--border); background: transparent; color: var(--muted);
+  cursor: pointer; flex-shrink: 0;
+}
+
+.range-row { display: flex; gap: 6px; margin: 4px 0 10px; }
+.range-row .filter-chip { padding: 5px 12px; }
+
+.chart { width: 100%; height: 180px; display: block; }
+.chart .axis { stroke: var(--border); stroke-width: 1; }
+.chart .line { fill: none; stroke: var(--teal); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.chart .goal { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.chart .pt { fill: var(--teal); }
+.chart .lbl { fill: var(--muted); font-size: 11px; }
+
+.log-inline { display: flex; flex-direction: column; gap: 12px; }
+.num-stepper { display: flex; align-items: center; gap: 12px; justify-content: center; }
+.num-stepper .num-display { font-size: 28px; font-weight: 800; min-width: 110px; text-align: center; }
+.num-stepper .num-display small { font-size: 15px; font-weight: 600; color: var(--muted); }
+.step-btn {
+  width: 52px; height: 52px; border-radius: 14px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  font-size: 24px; font-weight: 700; cursor: pointer;
+}
+.step-btn:active { background: var(--border); }
+
+/* ===================================================================
+   Workout: strength entries + WOD logging
+   =================================================================== */
+.entry-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; }
+.entry-card + .entry-card { margin-top: 12px; }
+.entry-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.entry-head h3 { margin: 0; font-size: 16px; flex: 1; }
+
+.set-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.set-row .set-idx { width: 22px; color: var(--muted); font-size: 13px; font-weight: 700; }
+.set-row input { width: auto; flex: 1; min-width: 0; text-align: center; padding: 8px; }
+.set-row .set-x { color: var(--muted); }
+.set-check {
+  width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.set-check.on { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+.felt-row { display: flex; gap: 8px; margin-top: 10px; }
+.felt-btn {
+  flex: 1; padding: 10px 6px; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  font-size: 13px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.felt-btn .felt-emoji { font-size: 18px; }
+.felt-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+/* Rx / Scaled and other segmented toggles */
+.toggle2 { display: flex; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.toggle2 button {
+  flex: 1; border: none; background: var(--surface); color: var(--text);
+  padding: 12px; font-size: 15px; font-weight: 700; cursor: pointer;
+}
+.toggle2 button.active { background: var(--teal); color: #fff; }
+
+.timer-display {
+  font-size: 52px; font-weight: 800; text-align: center;
+  font-variant-numeric: tabular-nums; margin: 8px 0;
+}
+
+/* WOD catalog cards */
+.wod-card { cursor: pointer; }
+.wod-card .wod-name { font-size: 16px; font-weight: 700; }
+.wod-card .wod-desc { white-space: pre-wrap; color: var(--muted); font-size: 13px; margin-top: 6px; line-height: 1.4; }
+
+/* ===================================================================
+   PR board
+   =================================================================== */
+.pr-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); border-radius: 12px; padding: 12px 14px;
+  box-shadow: var(--shadow); margin-bottom: 8px;
+}
+.pr-row .pr-name { flex: 1; font-weight: 600; }
+.pr-row .pr-value { font-weight: 800; }
+.pr-row .pr-sub { font-size: 12px; color: var(--muted); }
+
+/* ===================================================================
+   Settings
+   =================================================================== */
+.settings-group { margin-bottom: 8px; }
+.settings-note { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+/* ===================================================================
+   v3: 1RM board + running
+   =================================================================== */
+
+/* Active state for the Manage-lifts toggle (icon-btn had no .active rule). */
+.icon-btn.active { color: var(--teal); background: var(--border); }
+.icon-btn:disabled { opacity: 0.35; cursor: default; }
+
+/* pr-* helpers are reused standalone (outside .pr-row) on the 1RM cards, so give
+   them base styling; the more specific .pr-row rules still win inside a row. */
+.pr-name { font-weight: 600; }
+.pr-value { font-weight: 800; }
+.pr-sub { font-size: 12px; color: var(--muted); }
+
+/* 1RM working-set % table */
+.orm-percent-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.orm-percent-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+.orm-percent-row.active {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+}
+.orm-percent-pct { color: var(--muted); font-weight: 700; }
+.orm-percent-row.active .orm-percent-pct { color: #fff; }
+.orm-percent-kg { font-variant-numeric: tabular-nums; }
+
+.orm-plates {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.orm-plate-chip {
+  border-color: var(--border);
+  color: var(--text);
+  background: var(--bg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 1RM board: clean tappable lift rows (each opens the lift detail page) */
+.orm-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  color: var(--text);
+  cursor: pointer;
+}
+.orm-row .pr-name { flex: 1; }
+.orm-row-right { text-align: right; }
+.orm-row-chevron { color: var(--muted); flex-shrink: 0; }
+
+/* 1RM detail: one logged entry with edit / delete */
+.orm-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* "1RM 140 kg" label shown next to a movement name in the workout logger */
+.entry-1rm {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--teal);
+  white-space: nowrap;
+}
+
+/* %-of-1RM reference calculator in the workout logger */
+.pct-calc {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+}
+.pct-result {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 15px;
+}
+.pct-result strong { font-variant-numeric: tabular-nums; }
+
+/* Date picker on the Workout tab */
+.date-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+.date-field input { flex: 1; }
+
+/* Visually hidden but available to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Weekly running goal progress bar */
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+/* The workout bottom nav now has 6 tabs — keep labels on one line. */
+.nav-item { font-size: 11px; }
+.nav-item span { white-space: nowrap; }
