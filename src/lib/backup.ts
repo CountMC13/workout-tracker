@@ -125,13 +125,21 @@ function downloadBlob(blob: Blob, filename: string): void {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+// True when the browser can share an actual file via the OS share sheet. This is
+// the only reliable "save a file" path on Android Chrome / iOS Safari, where
+// showSaveFilePicker doesn't exist and <a download> is ignored by iOS.
+function canShareFile(file: File): boolean {
+  const nav = navigator as Navigator & { canShare?: (data: { files?: File[] }) => boolean };
+  return typeof nav.share === 'function' && typeof nav.canShare === 'function' && nav.canShare({ files: [file] });
+}
+
 // Returns true if the backup was actually written, false if the user cancelled
-// the Save dialog (so the caller doesn't wrongly record a "last backup" time).
+// the Save/Share dialog (so the caller doesn't wrongly record a "last backup" time).
 export async function exportBackup(): Promise<boolean> {
   const blob = await buildBackupZip();
   const filename = `fitness-backup-${new Date().toISOString().slice(0, 10)}.zip`;
 
-  // Prefer a real "Save As" dialog where supported (Windows Edge/Chrome).
+  // Prefer a real "Save As" dialog where supported (desktop Edge/Chrome).
   const picker = (window as unknown as { showSaveFilePicker?: (opts: unknown) => Promise<unknown> }).showSaveFilePicker;
   if (picker) {
     try {
@@ -145,9 +153,23 @@ export async function exportBackup(): Promise<boolean> {
       return true;
     } catch (e) {
       if ((e as { name?: string }).name === 'AbortError') return false; // user cancelled
-      // otherwise fall through to download
+      // otherwise fall through to share/download
     }
   }
+
+  // On mobile, hand the file to the OS share sheet so it can be saved to Files,
+  // Drive, etc. This is the path that actually works on Android/iOS.
+  const file = new File([blob], filename, { type: 'application/zip' });
+  if (canShareFile(file)) {
+    try {
+      await navigator.share({ files: [file], title: 'Fitness backup' });
+      return true;
+    } catch (e) {
+      if ((e as { name?: string }).name === 'AbortError') return false; // user dismissed the share sheet
+      // otherwise fall through to a plain download
+    }
+  }
+
   downloadBlob(blob, filename);
   return true;
 }

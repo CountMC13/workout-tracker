@@ -23,12 +23,14 @@ export default function WodDetailPage() {
 
   const [rx, setRx] = useState<RxStatus>('rx');
   const [date, setDate] = useState(todayKey());
-  const [mins, setMins] = useState(0);
-  const [secs, setSecs] = useState(0);
+  // Numeric fields are kept as raw strings so partial mobile input (a lone ".",
+  // an empty field mid-edit) doesn't collapse to 0/NaN while typing; coerced on save.
+  const [mins, setMins] = useState('');
+  const [secs, setSecs] = useState('');
   const [capped, setCapped] = useState(false);
-  const [rounds, setRounds] = useState(0);
-  const [extraReps, setExtraReps] = useState(0);
-  const [score, setScore] = useState(0);
+  const [rounds, setRounds] = useState('');
+  const [extraReps, setExtraReps] = useState('');
+  const [score, setScore] = useState('');
   const [notes, setNotes] = useState('');
 
   // Stopwatch (for-time)
@@ -51,8 +53,8 @@ export default function WodDetailPage() {
   const stopTimer = () => {
     setRunning(false);
     wakeLock.release();
-    setMins(Math.floor(elapsed / 60));
-    setSecs(elapsed % 60);
+    setMins(String(Math.floor(elapsed / 60)));
+    setSecs(String(elapsed % 60));
   };
 
   if (wod === undefined) return <div className="page"><p className="muted center">Loading…</p></div>;
@@ -83,16 +85,17 @@ export default function WodDetailPage() {
   };
 
   const save = async () => {
+    const num = (s: string) => Number(s) || 0;
     const input = {
       wodId: wod.id,
       wodName: wod.name,
       date,
       scoreType: wod.scoreType,
       rxStatus: rx,
-      durationSec: wod.scoreType === 'forTime' ? mins * 60 + secs : null,
-      rounds: wod.scoreType === 'amrap' ? rounds : null,
-      extraReps: wod.scoreType === 'amrap' ? extraReps : null,
-      score: wod.scoreType === 'load' || wod.scoreType === 'reps' ? score : null,
+      durationSec: wod.scoreType === 'forTime' ? num(mins) * 60 + num(secs) : null,
+      rounds: wod.scoreType === 'amrap' ? num(rounds) : null,
+      extraReps: wod.scoreType === 'amrap' ? num(extraReps) : null,
+      score: wod.scoreType === 'load' || wod.scoreType === 'reps' ? num(score) : null,
       cappedOut: wod.scoreType === 'forTime' ? capped : false,
       notes,
     };
@@ -147,11 +150,11 @@ export default function WodDetailPage() {
             <div className="field-row">
               <label className="field">
                 <span>Minutes</span>
-                <input type="number" inputMode="numeric" value={mins || ''} onChange={(e) => setMins(Number(e.target.value))} />
+                <input type="number" inputMode="numeric" value={mins} onChange={(e) => setMins(e.target.value)} />
               </label>
               <label className="field">
                 <span>Seconds</span>
-                <input type="number" inputMode="numeric" value={secs || ''} onChange={(e) => setSecs(Number(e.target.value))} />
+                <input type="number" inputMode="numeric" value={secs} onChange={(e) => setSecs(e.target.value)} />
               </label>
             </div>
             <label className="row-between">
@@ -165,11 +168,11 @@ export default function WodDetailPage() {
           <div className="field-row">
             <label className="field">
               <span>Rounds</span>
-              <input type="number" inputMode="numeric" value={rounds || ''} onChange={(e) => setRounds(Number(e.target.value))} />
+              <input type="number" inputMode="numeric" value={rounds} onChange={(e) => setRounds(e.target.value)} />
             </label>
             <label className="field">
               <span>+ Reps</span>
-              <input type="number" inputMode="numeric" value={extraReps || ''} onChange={(e) => setExtraReps(Number(e.target.value))} />
+              <input type="number" inputMode="numeric" value={extraReps} onChange={(e) => setExtraReps(e.target.value)} />
             </label>
           </div>
         )}
@@ -177,7 +180,7 @@ export default function WodDetailPage() {
         {(wod.scoreType === 'load' || wod.scoreType === 'reps') && (
           <label className="field">
             <span>{wod.scoreType === 'load' ? 'Load (kg)' : 'Reps'}</span>
-            <input type="number" inputMode="decimal" value={score || ''} onChange={(e) => setScore(Number(e.target.value))} />
+            <input type="number" inputMode="decimal" value={score} onChange={(e) => setScore(e.target.value)} />
           </label>
         )}
 
