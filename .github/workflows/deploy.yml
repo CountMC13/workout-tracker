@@ -27,7 +27,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      # enablement: true turns on GitHub Pages (Actions source) on the first run,
+      # so no manual repo-settings toggle is needed.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
