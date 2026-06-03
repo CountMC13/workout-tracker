@@ -169,15 +169,18 @@ export async function getProfile(): Promise<Profile> {
   const existing = await db.profile.get('me');
   // Spread DEFAULT_PROFILE first so a profile saved before v3 picks up the new
   // fields (weeklyRunGoalKm, barWeightKg) without a migration callback.
+  // Read-only: this is called from useLiveQuery (a read-only transaction), so it
+  // must NOT write — creating the row here throws ReadOnlyError. The row is
+  // created lazily by updateProfile instead; a missing row just yields defaults.
   if (existing) return { ...DEFAULT_PROFILE, ...existing };
-  const fresh: Profile = { ...DEFAULT_PROFILE, updatedAt: Date.now() };
-  await db.profile.put(fresh);
-  return fresh;
+  return { ...DEFAULT_PROFILE, updatedAt: Date.now() };
 }
 
 export async function updateProfile(patch: Partial<Omit<Profile, 'id'>>): Promise<void> {
-  await getProfile(); // ensure the row exists
-  await db.profile.update('me', { ...patch, updatedAt: Date.now() });
+  // put = create-or-replace, so this works whether or not the row exists yet
+  // (getProfile is read-only and no longer creates it).
+  const current = await getProfile();
+  await db.profile.put({ ...current, ...patch, updatedAt: Date.now() });
 }
 
 // One weight entry per day: re-logging the same day updates it.
